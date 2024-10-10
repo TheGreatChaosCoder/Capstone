@@ -8,3 +8,7 @@
  * @copyright Copyright (c) 2024
  * 
  */
+
+int main(){
+    return 0;
+}
