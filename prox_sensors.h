@@ -1,11 +1,20 @@
-#ifndef PROX_SENSORS_HPP 
-#define PROX_SENSORS_HPP 
+#ifndef PROX_SENSORS_H
+#define PROX_SENSORS_H
  
-class ProximitySensor { 
-public: 
-    ProximitySensor(int gpio); // Constructor and Initializer
-    ~ProximitySensor(); // Destructor
-    double readSensor(); // Read Sensor
-}; 
+   #ifdef __cplusplus
+      extern "C"
+      {
+   #endif
+    typedef struct {
+        int triggerGpio;
+        int echoGpio;
+    }  ProximitySensor; 
+
+    int initProxSensor(int triggerGpio, int echoGpio);
+    double readSensor(ProximitySensor sensor);
+
+   #ifdef __cplusplus
+      } // extern "C"
+   #endif
  
-#endif // PROX_SENSORS_HPP
+#endif // PROX_SENSORS_H
