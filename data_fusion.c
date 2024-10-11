@@ -1,7 +1,7 @@
 #include "data_fusion.h"
 #include <math.h>
 
-double calculateDistance(double* data, double* position, int numData);
+double calculateDistance(const double* data, const double* position, const int numData);
 
 /**
  * @brief Assuming that sensors are in a line, 
@@ -20,7 +20,7 @@ int inRange(
     int numData,
     double threshold
 ){
-    if(threshold > calculateDistance(data, position)){
+    if(threshold > calculateDistance(data, position, numData)){
         return 1;
     }
     
@@ -28,9 +28,9 @@ int inRange(
 }
 
 double calculateDistance(
-    double* data, 
-    double* position,
-    int numData
+    const double* data, 
+    const double* position,
+    const int numData
 ){
     double result = 0;
     int dataUsed = 0;
@@ -38,7 +38,7 @@ double calculateDistance(
 
     for(i = 0; i<numData; i++){
         // This is an invalid arguemnt
-        if(data[1]/position[i]) > 1{
+        if(data[1]/position[i] > 1){
             continue;
         }
 
