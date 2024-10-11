@@ -35,7 +35,6 @@ static ssize_t estop_device_read(struct file *filp, char __user *buffer, size_t 
 {
 	// Whatever is in msg will be placed into buffer, which will be copied into user space
 	ssize_t dummy = copy_to_user(buffer, button_msg, length); // dummy will be 0 if successful
-	printk(KERN_INFO "Here %i\n", buffer[0]);
 
 	return length;
 }

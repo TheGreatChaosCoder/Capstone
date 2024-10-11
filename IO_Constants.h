@@ -16,10 +16,19 @@
    #define PROX_SENSOR_ECHO_1 = 8
    #define PROX_SENSOR_ECHO_2 = 9
 
-   #define MOTOR_CONTROLLER_L_F = 7
-   #define MOTOR_CONTROLLER_L_R = 8
-   #define MOTOR_CONTROLLER_R_F = 9
-   #define MOTOR_CONTROLLER_R_R = 10
+   #define MOTOR_CONTROLLER_F = 7
+   #define MOTOR_CONTROLLER_R = 8
+
+   // Distance Threshold
+   #define DISTANCE_LOAD_THRESHOLD = 0.2
+   #define DISTANCE_UNLOAD_THRESHOLD = 0.2
+
+   // Position of Sensors (ft)
+   #define POS_SENSOR_1 = 0.25
+   #define POS_SENSOR_2 = -0.25
+
+   // Sensor Read Timeout (us)
+   #define TIMEOUT = 100
 
    // Define Character Device Names
    #define CDEV_NAME_BUTTON "Button"

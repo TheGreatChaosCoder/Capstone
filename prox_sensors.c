@@ -24,26 +24,26 @@ ProximitySensor initProxSensor(
 }
 
 double readSensor(
-    const ProximitySensor sensor,
+    const ProximitySensor * sensor,
     const double timeout_us
     )
 {
     struct timeval start, end, measureStart, measureEnd;
     int elapsed, pulseWidth;
 
-    gpioWrite(sensor.triggerGpio, 1);
+    gpioWrite(sensor->triggerGpio, 1);
     usleep(10);
-    gpioWrite(sensor.triggerGpio, 0);
+    gpioWrite(sensor->triggerGpio, 0);
 
     gettimeofday(&start,NULL);
     gettimeofday(&end,NULL);
 
     elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 
-    while(gpioRead(sensor.echoGpio) == 0 && elapsed < timeout_us)
+    while(gpioRead(sensor->echoGpio) == 0 && elapsed < timeout_us)
     {
         gettimeofday(&measureStart, NULL);
-        while ( gpioRead(sensor.echoGpio) == 1 );
+        while ( gpioRead(sensor->echoGpio) == 1 );
         gettimeofday(&measureEnd,NULL);
 
         gettimeofday(&end,NULL);

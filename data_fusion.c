@@ -38,7 +38,7 @@ double calculateDistance(
 
     for(i = 0; i<numData; i++){
         // This is an invalid arguemnt
-        if(data[1]/position[i] > 1){
+        if(abs(data[1]/position[i]) > 1){
             continue;
         }
 

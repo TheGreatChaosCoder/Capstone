@@ -11,7 +11,7 @@
     }  ProximitySensor; 
 
     ProximitySensor initProxSensor(int triggerGpio, int echoGpio);
-    double readSensor(const ProximitySensor sensor, const double timeout_us);
+    double readSensor(const ProximitySensor * sensor, const double timeout_us);
 
    #ifdef __cplusplus
       } // extern "C"

@@ -6,15 +6,13 @@
       {
    #endif
     typedef struct {
-        int leftForward;
-	int leftReverse;
-	int rightForward;
-	int rightReverse;
+        int forward;
+	     int reverse;
     }  MotorController;
 
-    MotorController initMotorController(int lfPin, int lrPin, int rfPin, int rrPin);
-    int setMotorSpeed(MotorController controller, float speed);
-    void stopMotor(MotorController controller);
+    MotorController initMotorController(int forwardPin, int reversePin);
+    int setMotorSpeed(MotorController * controller, float speed);
+    void stopMotor(MotorController * controller);
 
    #ifdef __cplusplus
       } // extern "C"

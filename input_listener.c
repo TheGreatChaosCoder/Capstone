@@ -55,7 +55,7 @@ static struct file_operations fops = {
 	.read = device_read,
 };
 
-//Interrupt handler for InputPin. This will be called whenever there is a rising edge detected.
+//Interrupt handler. This will be called whenever there is a rising edge detected.
 static irqreturn_t irq_unload(int irq,void *dev_id)
 {
 	msg[0] = UNLOAD_BUTTON;

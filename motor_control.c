@@ -1,42 +1,57 @@
 #include "motor_control.h"
 #include <pigpio.h>
 
+void setMotorController(const MotorController * controller, double speed);
+
 MotorController initMotorController(
-    int lfPin,
-    int lrPin,
-    int rfPin,
-    int rrPin
+    int forwardPin,
+    int reversePin
     )
 {
     MotorController controller;
-    controller.leftForward = lfPin;
-    controller.leftReverse = lrPin;
-    controller.rightForward = rfPin;
-    controller.rightReverse = rrPin;
+    controller.forward = forwardPin;
+    controller.reverse = reversePin;
 
-    gpioSetMode(pwmGpio, PI_OUTPUT);
+    gpioSetMode(forwardPin, PI_OUTPUT);
+    gpioSetMode(reversePin, PI_OUTPUT);
 
     return controller;
 }
 
+// Positive = Forward
 int setMotorSpeed(
-    MotorController controller,
+    MotorController * controller,
     float speed
     )
 {
-    if(speed < 0 || speed > 1){
+    if(speed < -1 || speed > 1){
         return -1;
     }
 
-    gpioPWM(controller.pwmGpio, (int) (255 * speed));
+    setMotorController(controller, speed);
 
     return 0;
 }
 
 void stopMotor(
-    MotorController controller
-)
+    MotorController * controller
+    )
 {
-    gpioPWM(controller.pwmGpio, 0);
+    setMotorController(controller, 0);
+}
+
+void setMotorController(
+    const MotorController * controller
+    double speed
+    )
+{
+    if(speed > 0){
+        gpioPWM(controller->forward, (int) (255 * speed));
+        gpioPWM(controller->reverse, 0);
+    }
+    else{
+        gpioPWM(controller->forward, 0);
+        gpioPWM(controller->reverse, (int) (255 * speed));
+    }
 }
 
