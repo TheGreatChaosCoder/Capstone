@@ -5,16 +5,16 @@ MotorController initMotorController(
     int pwmGpio
     )
 {
-    wiringPiSetup();
-
     MotorController controller;
     controller.pwmGpio = pwmGpio;
 
     gpioSetMode(pwmGpio, PI_OUTPUT);
+
+    return controller;
 }
 
 int setMotorSpeed(
-    MotorController controller, 
+    MotorController controller,
     float speed
     )
 {
@@ -24,6 +24,7 @@ int setMotorSpeed(
 
     gpioPWM(controller.pwmGpio, (int) (255 * speed));
 
+    return 0;
 }
 
 void stopMotor(

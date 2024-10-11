@@ -1,12 +1,8 @@
-#include "prox_sensors.c"
+#include "prox_sensors.h"
 #include <pigpio.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/time.h>
-
-struct timeval {
-    time_t      tv_sec;     /* seconds */
-    suseconds_t tv_usec;    /* microseconds */
-};
 
 double getPulseLength(ProximitySensor sensor);
 
@@ -28,7 +24,7 @@ ProximitySensor initProxSensor(
 }
 
 double readSensor(
-    const ProximitySensor sensor, 
+    const ProximitySensor sensor,
     const double timeout_us
     )
 {
@@ -44,10 +40,10 @@ double readSensor(
 
     elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 
-    while(gpioRead(sensor.echo) == 0 && elapsed < timeout)
+    while(gpioRead(sensor.echoGpio) == 0 && elapsed < timeout_us)
     {
         gettimeofday(&measureStart, NULL);
-        while ( gpioRead(echo) == 1 );
+        while ( gpioRead(sensor.echoGpio) == 1 );
         gettimeofday(&measureEnd,NULL);
 
         gettimeofday(&end,NULL);
