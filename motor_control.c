@@ -41,7 +41,7 @@ void stopMotor(
 }
 
 void setMotorController(
-    const MotorController * controller
+    const MotorController * controller,
     double speed
     )
 {

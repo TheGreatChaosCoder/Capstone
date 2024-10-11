@@ -21,15 +21,15 @@
    #define MOTOR_CONTROLLER_R = 33
 
    // Distance Threshold
-   #define DISTANCE_LOAD_THRESHOLD = 0.2
-   #define DISTANCE_UNLOAD_THRESHOLD = 0.2
+   #define DISTANCE_LOAD_THRESHOLD 0.2
+   #define DISTANCE_UNLOAD_THRESHOLD 0.2
 
    // Position of Sensors (ft)
-   #define POS_SENSOR_1 = 0.25
-   #define POS_SENSOR_2 = -0.25
+   #define POS_SENSOR_1 0.25
+   #define POS_SENSOR_2 -0.25
 
    // Sensor Read Timeout (us)
-   #define TIMEOUT = 100
+   #define TIMEOUT 100
 
    // Define Character Device Names
    #define CDEV_NAME_BUTTON "Button"
