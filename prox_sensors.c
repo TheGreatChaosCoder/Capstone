@@ -1,5 +1,5 @@
 #include "prox_sensors.c"
-#include <wiringPi.h>
+#include <pigpio.h>
 #include <stdio.h>
 #include <sys/time.h>
 
@@ -9,7 +9,6 @@ struct timeval {
 };
 
 double getPulseLength(ProximitySensor sensor);
-static void getTime(struct
 
 ProximitySensor initProxSensor(
     const int triggerGpio, 
@@ -20,9 +19,9 @@ ProximitySensor initProxSensor(
     sensor.triggerGpio = triggerGpio;
     sensor.echoGpio = echoGpio;
 
-    pinMode(trigger, OUTPUT);
-    pinMode(echo, INPUT);
-    digitalWrite(trigger, LOW);
+    gpioSetMode(triggerGpio, PI_OUTPUT);
+    gpioSetMode(echoGpio, PI_INPUT);
+    gpioWrite(triggerGpio, 1);
     usleep(500);
 
     return sensor;
@@ -36,19 +35,19 @@ double readSensor(
     struct timeval start, end, measureStart, measureEnd;
     int elapsed, pulseWidth;
 
-    digitalWrite(sensor.triggerGpio, HIGH);
+    gpioWrite(sensor.triggerGpio, 1);
     usleep(10);
-    digitalWrite(sensor.triggerGpio, LOW);
+    gpioWrite(sensor.triggerGpio, 0);
 
     gettimeofday(&start,NULL);
     gettimeofday(&end,NULL);
 
     elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 
-    while(digitalRead(sensor.echo) == LOW && elapsed < timeout)
+    while(gpioRead(sensor.echo) == 0 && elapsed < timeout)
     {
         gettimeofday(&measureStart, NULL);
-        while ( digitalRead(echo) == HIGH );
+        while ( gpioRead(echo) == 1 );
         gettimeofday(&measureEnd,NULL);
 
         gettimeofday(&end,NULL);

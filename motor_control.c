@@ -1,5 +1,5 @@
 #include "motor_control.h"
-#include <wiringPi.h>
+#include <pigpio.h>
 
 MotorController initMotorController(
     int pwmGpio
@@ -10,7 +10,7 @@ MotorController initMotorController(
     MotorController controller;
     controller.pwmGpio = pwmGpio;
 
-    pinMode(pwmGpio, PWM_OUTPUT);
+    gpioSetMode(pwmGpio, PI_OUTPUT);
 }
 
 int setMotorSpeed(
@@ -22,7 +22,7 @@ int setMotorSpeed(
         return -1;
     }
 
-    pwmWrite(controller.pwmGpio, (int) (1023 * speed));
+    gpioPWM(controller.pwmGpio, (int) (255 * speed));
 
 }
 
@@ -30,6 +30,6 @@ void stopMotor(
     MotorController controller
 )
 {
-    pwmWrite(controller.pwmGpio, 0);
+    gpioPWM(controller.pwmGpio, 0);
 }
 

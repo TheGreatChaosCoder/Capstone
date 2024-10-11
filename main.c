@@ -9,6 +9,10 @@
  * 
  */
 
+#include <pigpio.h>
+
 int main(){
+    gpioInitialise(void);
+    
     return 0;
 }
