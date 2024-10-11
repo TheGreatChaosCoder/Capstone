@@ -2,11 +2,17 @@
 #include <pigpio.h>
 
 MotorController initMotorController(
-    int pwmGpio
+    int lfPin,
+    int lrPin,
+    int rfPin,
+    int rrPin
     )
 {
     MotorController controller;
-    controller.pwmGpio = pwmGpio;
+    controller.leftForward = lfPin;
+    controller.leftReverse = lrPin;
+    controller.rightForward = rfPin;
+    controller.rightReverse = rrPin;
 
     gpioSetMode(pwmGpio, PI_OUTPUT);
 

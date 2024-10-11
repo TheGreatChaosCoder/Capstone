@@ -6,10 +6,13 @@
       {
    #endif
     typedef struct {
-        int pwmGpio;
-    }  MotorController; 
+        int leftForward;
+	int leftReverse;
+	int rightForward;
+	int rightReverse;
+    }  MotorController;
 
-    MotorController initMotorController(int pwmGpio);
+    MotorController initMotorController(int lfPin, int lrPin, int rfPin, int rrPin);
     int setMotorSpeed(MotorController controller, float speed);
     void stopMotor(MotorController controller);
 
