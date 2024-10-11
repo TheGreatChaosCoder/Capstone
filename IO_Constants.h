@@ -11,10 +11,10 @@
    #define UNLOAD_BUTTON = 27
    #define SOFT_ESTOP = 22
 
-   #define PROX_SENSOR_TRIGGER_1 = 23
+   #define PROX_SENSOR_TRIGGER_1 = 16
    #define PROX_SENSOR_TRIGGER_2 = 24
    #define PROX_SENSOR_ECHO_1 = 25
-   #define PROX_SENSOR_ECHO_2 = 16
+   #define PROX_SENSOR_ECHO_2 = 23
 
    // These GPIOs are the PWM pins
    #define MOTOR_CONTROLLER_F = 32
