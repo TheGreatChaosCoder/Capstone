@@ -15,6 +15,7 @@ ProximitySensor initProxSensor(
     sensor.triggerGpio = triggerGpio;
     sensor.echoGpio = echoGpio;
 
+    gpioInitialise();
     gpioSetMode(triggerGpio, PI_OUTPUT);
     gpioSetMode(echoGpio, PI_INPUT);
     gpioWrite(triggerGpio, 1);
