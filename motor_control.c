@@ -13,8 +13,8 @@ MotorController initMotorController(
     controller.reverse = reversePin;
 
     gpioInitialise();
-    gpioSetMode(forwardPin, PI_OUTPUT);
-    gpioSetMode(reversePin, PI_OUTPUT);
+    gpioSetMode(forwardPin, PI_ALT0);
+    gpioSetMode(reversePin, PI_ALT0);
 
     return controller;
 }

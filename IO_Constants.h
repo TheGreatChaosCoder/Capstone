@@ -16,8 +16,8 @@
    #define PROX_SENSOR_ECHO_1 25
    #define PROX_SENSOR_ECHO_2 23
 
-   #define MOTOR_CONTROLLER_F 32
-   #define MOTOR_CONTROLLER_R 33
+   #define MOTOR_CONTROLLER_F 12
+   #define MOTOR_CONTROLLER_R 13
 
    // Distance Threshold
    #define DISTANCE_LOAD_THRESHOLD 0.2

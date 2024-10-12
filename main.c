@@ -31,11 +31,18 @@ sem_t button_mutex;
 int buttons[3]; // load, unload, estop
 
 void * estopButtonThread(void * ptr){
+    buttons[2] = 0;
+
     while(1)
     {
         sem_wait(&estop_mutex);
         buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
         sem_post(&estop_mutex);
+
+	if(buttons[2]){
+	   printf("EStop Button Pressed\n");
+	}
+
         usleep(100);
     }
 
@@ -43,12 +50,23 @@ void * estopButtonThread(void * ptr){
 }
 
 void * loadingButtonThread(void * ptr){
+    buttons[0] = 0;
+    buttons[1] = 0;
+
     while(1)
     {
         sem_wait(&button_mutex);
         buttons[0] = (gpioRead(LOAD_BUTTON) == 1);
         buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !buttons[0]);
         sem_post(&button_mutex);
+
+	if(buttons[0]){
+	   printf("Load Button Pressed\n");
+	}
+	else if(buttons[1]){
+	   printf("Unload Button Pressed\n");
+	}
+
         usleep(200);
     }
 
@@ -60,12 +78,16 @@ int main(){
     printf("Getting All GPIOs Ready...\n");
     MotorController mController;
     ProximitySensor pSensor[2];
-    int motorOn, buttonInput;
+    int motorOn = 0;
+    int buttonInput;
     double speed, data[2];
 
     double positions[] = {POS_SENSOR_1, POS_SENSOR_2};
 
-    gpioInitialise();
+    if(gpioInitialise() == PI_INIT_FAILED){
+       printf("Cannot init gpio, exiting\n");
+       return 1;
+    }
 
     gpioSetMode(SOFT_ESTOP, PI_INPUT);
     gpioSetMode(LOAD_BUTTON, PI_INPUT);
@@ -79,7 +101,7 @@ int main(){
     pthread_t estopThread, buttonThread;
 
     sem_init(&button_mutex, 0, 1);
-    sem_init(&estop_mutex, 0, 1);  
+    sem_init(&estop_mutex, 0, 1);
 
     pthread_create(&estopThread, NULL, &estopButtonThread, NULL);
     pthread_create(&buttonThread, NULL, &loadingButtonThread, NULL);
@@ -134,6 +156,11 @@ int main(){
             motorOn = 1;
             speed = -1;
         }
+	else{
+	    motorOn = 0;
+	}
+
+	usleep(100);
 
     }
 
