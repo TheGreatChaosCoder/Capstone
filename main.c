@@ -26,6 +26,8 @@
 #define CDEV_NAME_BUTTON_FULL "/dev/Button"
 #define CDEV_NAME_ESTOP_FULL "/dev/EStop"
 
+// Start of Input Event Listeners
+
 sem_t estop_mutex;
 sem_t button_mutex; 
 int buttons[3]; // load, unload, estop
@@ -72,6 +74,8 @@ void * loadingButtonThread(void * ptr){
 
     pthread_exit(NULL);
 }
+
+// End of Input Event Listeners
 
 int main(){
     // Initialize All Sensors/Controllers/GPIOs
