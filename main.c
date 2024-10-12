@@ -33,7 +33,6 @@ int buttons[3]; // load, unload, estop
 void * estopButtonThread(void * ptr){
     while(1)
     {
-        printf("Green\n");
         sem_wait(&estop_mutex);
         buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
         sem_post(&estop_mutex);
@@ -46,10 +45,9 @@ void * estopButtonThread(void * ptr){
 void * loadingButtonThread(void * ptr){
     while(1)
     {
-        printf("Green\n");
         sem_wait(&button_mutex);
         buttons[0] = (gpioRead(LOAD_BUTTON) == 1);
-        buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !button[0]);
+        buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !buttons[0]);
         sem_post(&button_mutex);
         usleep(200);
     }

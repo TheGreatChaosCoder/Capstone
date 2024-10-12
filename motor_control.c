@@ -12,6 +12,7 @@ MotorController initMotorController(
     controller.forward = forwardPin;
     controller.reverse = reversePin;
 
+    gpioInitialise();
     gpioSetMode(forwardPin, PI_OUTPUT);
     gpioSetMode(reversePin, PI_OUTPUT);
 
