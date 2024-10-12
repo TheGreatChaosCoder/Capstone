@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <pthread.h>
 
 #include "motor_control.h"
 #include "prox_sensors.h"
@@ -24,23 +25,38 @@
 #define CDEV_NAME_BUTTON_FULL "/dev/Button"
 #define CDEV_NAME_ESTOP_FULL "/dev/EStop"
 
+sem_t estop_mutex;
+sem_t button_mutex; 
+int buttons[3]; // load, unload, estop
+
+void * estopButtonThread(void * ptr){
+    while(1)
+    {
+        printf("Green\n");
+        sem_wait(&estop_mutex);
+        button[2] = (gpioRead(SOFT_ESTOP) == 1);
+        sem_post(&estop_mutex);
+        usleep(100);
+    }
+
+    pthread_exit(NULL);
+}
+
+void * loadingButtonThread(void * ptr){
+    while(1)
+    {
+        printf("Green\n");
+        sem_wait(&button_mutex);
+        button[0] = (gpioRead(LOAD_BUTTON) == 1);
+        button[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !button[0]);
+        sem_post(&button_mutex);
+        usleep(200);
+    }
+
+    pthread_exit(NULL);
+}
+
 int main(){
-    // Get character devices
-    printf("Getting Character Devices Ready...\n");
-    int cdev_button_id, cdev_estop_id, bytes_read;
-    char button_buffer[BUFFER_SIZE], estop_buffer[BUFFER_SIZE];
-    char zero_buffer[1] = {0};
-
-    if((cdev_button_id = open(CDEV_NAME_BUTTON_FULL, O_RDWR)) == -1) {
-	    printf("Cannot open device %s\n", CDEV_NAME_BUTTON);
-	    return 1;
-    }
-
-    if((cdev_estop_id = open(CDEV_NAME_ESTOP_FULL, O_RDONLY)) == -1) {
-        printf("Cannot open device %s\n", CDEV_NAME_ESTOP);
-	return 1;
-    }
-
     // Initialize All Sensors/Controllers/GPIOs
     printf("Getting All GPIOs Ready...\n");
     MotorController mController;
@@ -52,9 +68,22 @@ int main(){
 
     gpioInitialise();
 
+    gpioSetMode(SOFT_ESTOP, PI_INPUT);
+    gpioSetMode(LOAD_BUTTON, PI_INPUT);
+    gpioSetMode(UNLOAD_BUTTON, PI_INPUT);
+
     mController = initMotorController(MOTOR_CONTROLLER_F, MOTOR_CONTROLLER_R);
     pSensor[0] = initProxSensor(PROX_SENSOR_TRIGGER_1, PROX_SENSOR_ECHO_1);
     pSensor[1] = initProxSensor(PROX_SENSOR_TRIGGER_2, PROX_SENSOR_ECHO_2);
+
+    printf("Setting Up Threads and Semaphores...\n");
+    pthread_t estopThread, buttonThread;
+
+    sem_init(&button_mutex, 0, 1);
+    sem_init(&estop_mutex, 0, 1);  
+
+    pthread_create(&estopThread, NULL, &estopButtonThread, NULL);
+    pthread_create(&buttonThread, NULL, &loadingButtonThread, NULL);
 
     printf("Starting Loop...\n");
 
@@ -62,26 +91,19 @@ int main(){
     while(1)
     {
         // Check Estop First
-        bytes_read = read(cdev_estop_id, estop_buffer, sizeof(estop_buffer));
-        if (bytes_read < 0) {
-            printf("Estop Read Failed, leaving...\n");
-            break;
-        }
-
-        if(estop_buffer[0] == SOFT_ESTOP){
+        sem_wait(&estop_mutex);
+        if(button[2] == 1){
+            usleep(500);
             continue;
         }
+        sem_post(&estop_mutex);
 
         // Check Button Presses
-        bytes_read = read(cdev_button_id, button_buffer, sizeof(button_buffer));
-        if (bytes_read < 0) {
-            printf("Estop Read Failed, leaving...\n");
-            break;
-        }
-
-        // Write a 0 to say that the button input has been read
-        buttonInput = button_buffer[0];
-        write(cdev_button_id, zero_buffer, sizeof(zero_buffer)); 
+        sem_wait(&button_mutex);
+        buttonInput = button[0] == 1 ? LOAD_BUTTON :
+                      button[1] == 1 ? UNLOAD_BUTTON :
+                      0; 
+        sem_post(&button_mutex);
 
         // Check if motor on
         if(motorOn){
@@ -116,6 +138,9 @@ int main(){
 
     }
 
+    pthread_join(estopThread, NULL);
+    pthread_join(buttonThread, NULL);
     gpioTerminate();
+    
     return 0;
 }
