@@ -1,13 +1,13 @@
 /**
  * @file input_listener.c
  * @author Connor Johnson
- * @brief Inplements interrupts for button inputs 
+ * @brief Inplements interrupts for button inputs
  *        in kernel space.
  * @version 0.1
  * @date 2024-09-25
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -40,31 +40,22 @@ static ssize_t button_device_read(struct file *filp, char __user *buffer, size_t
 	return length;
 }
 
-static ssize_t button_device_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
-{
-	// Whatever is in msg will be placed into buffer, which will be copied into user space
-	ssize_t dummy = copy_to_user(buffer, button_msg, length); // dummy will be 0 if successful
-	printk(KERN_INFO "Here %i\n", buffer[0]);
-
-	return length;
-}
-
 // structure needed when registering the Character Device. Members are the callback
 // functions when the device is read from or written to.
 static struct file_operations fops = {
-	.read = device_read,
+	.read = button_device_read,
 };
 
 //Interrupt handler. This will be called whenever there is a rising edge detected.
 static irqreturn_t irq_unload(int irq,void *dev_id)
 {
-	msg[0] = UNLOAD_BUTTON;
+	button_msg[0] = UNLOAD_BUTTON;
 	return IRQ_HANDLED;
 }
 
 static irqreturn_t irq_load(int irq,void *dev_id)
 {
-	msg[0] = LOAD_BUTTON;
+	button_msg[0] = LOAD_BUTTON;
 	return IRQ_HANDLED;
 }
 

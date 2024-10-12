@@ -7,17 +7,17 @@
       {
    #endif
 
-   #define LOAD_BUTTON 3
-   #define UNLOAD_BUTTON 4
-   #define SOFT_ESTOP 4
+   #define LOAD_BUTTON 17
+   #define UNLOAD_BUTTON 27
+   #define SOFT_ESTOP 22
 
-   #define PROX_SENSOR_TRIGGER_1 5
-   #define PROX_SENSOR_TRIGGER_2 6
-   #define PROX_SENSOR_ECHO_1 8
-   #define PROX_SENSOR_ECHO_2 9
+   #define PROX_SENSOR_TRIGGER_1 16
+   #define PROX_SENSOR_TRIGGER_2 24
+   #define PROX_SENSOR_ECHO_1 25
+   #define PROX_SENSOR_ECHO_2 23
 
-   #define MOTOR_CONTROLLER_F 7
-   #define MOTOR_CONTROLLER_R 8
+   #define MOTOR_CONTROLLER_F 32
+   #define MOTOR_CONTROLLER_R 33
 
    // Distance Threshold
    #define DISTANCE_LOAD_THRESHOLD 0.2
