@@ -49,7 +49,7 @@ void * loadingButtonThread(void * ptr){
         printf("Green\n");
         sem_wait(&button_mutex);
         buttons[0] = (gpioRead(LOAD_BUTTON) == 1);
-        buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !button[0]);
+        buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !buttons[0]);
         sem_post(&button_mutex);
         usleep(200);
     }
