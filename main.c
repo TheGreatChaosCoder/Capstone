@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 #include "motor_control.h"
 #include "prox_sensors.h"
@@ -34,7 +35,7 @@ void * estopButtonThread(void * ptr){
     {
         printf("Green\n");
         sem_wait(&estop_mutex);
-        button[2] = (gpioRead(SOFT_ESTOP) == 1);
+        buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
         sem_post(&estop_mutex);
         usleep(100);
     }
@@ -47,8 +48,8 @@ void * loadingButtonThread(void * ptr){
     {
         printf("Green\n");
         sem_wait(&button_mutex);
-        button[0] = (gpioRead(LOAD_BUTTON) == 1);
-        button[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !button[0]);
+        buttons[0] = (gpioRead(LOAD_BUTTON) == 1);
+        buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !button[0]);
         sem_post(&button_mutex);
         usleep(200);
     }
@@ -92,7 +93,7 @@ int main(){
     {
         // Check Estop First
         sem_wait(&estop_mutex);
-        if(button[2] == 1){
+        if(buttons[2] == 1){
             usleep(500);
             continue;
         }
@@ -100,8 +101,8 @@ int main(){
 
         // Check Button Presses
         sem_wait(&button_mutex);
-        buttonInput = button[0] == 1 ? LOAD_BUTTON :
-                      button[1] == 1 ? UNLOAD_BUTTON :
+        buttonInput = buttons[0] == 1 ? LOAD_BUTTON :
+                      buttons[1] == 1 ? UNLOAD_BUTTON :
                       0; 
         sem_post(&button_mutex);
 
@@ -141,6 +142,6 @@ int main(){
     pthread_join(estopThread, NULL);
     pthread_join(buttonThread, NULL);
     gpioTerminate();
-    
+
     return 0;
 }
