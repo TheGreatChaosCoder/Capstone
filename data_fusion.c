@@ -33,18 +33,33 @@ double calculateDistance(
     const int numData
 ){
     double result = 0;
-    int dataUsed = 0;
-    int i;
+    int calculationsUsed = 0;
+    double temp, x;
+    int i, j;
 
     for(i = 0; i<numData; i++){
-        // This is an invalid arguemnt
-        if(abs(data[1]/position[i]) > 1){
-            continue;
-        }
+        for(j = 0; j<numData; j++){
+            // Cannot make calculations if i==j
+            if(i == j){
+                continue;
+            }
 
-        result += sqrt(data[i]*data[i] - position[i]*position[i]);
-        dataUsed++;
+            // cos(theta) = (d_1^2 + x^2 -d_2^2)/(2*d_1*x)
+            x = position[i]-position[j];
+            temp = (data[i]*data[i] + x*x - data[j]*data[j] )/(2*data[i]*x);
+            temp = temp * temp;
+
+             // This is an invalid arguemnt
+            if(temp > 1){
+                continue;
+            }
+
+            // r = d_1 * sqrt(1-temp)
+            result += data[i] * sqrt(1 - temp);
+            dataUsed++;
+        }
     }
 
+    // Taking average of calculations
     return result/dataUsed;
 }
