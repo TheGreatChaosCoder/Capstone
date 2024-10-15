@@ -2,12 +2,13 @@
 #include <pigpio.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <time.h>
 
 double getPulseLength(ProximitySensor sensor);
+void sonarEcho(int gpio, int level, uint32_t tick, void * diffTick);
 
 ProximitySensor initProxSensor(
-    const int triggerGpio, 
+    const int triggerGpio,
     const int echoGpio
     )
 {
@@ -18,7 +19,7 @@ ProximitySensor initProxSensor(
     gpioInitialise();
     gpioSetMode(triggerGpio, PI_OUTPUT);
     gpioSetMode(echoGpio, PI_INPUT);
-    gpioWrite(triggerGpio, 1);
+    gpioWrite(triggerGpio, 0);
     usleep(500);
 
     return sensor;
@@ -29,33 +30,54 @@ double readSensor(
     const double timeout_us
     )
 {
-    struct timeval start, end, measureStart, measureEnd;
-    long elapsed, pulseWidth;
+    clock_t startTime, endTime;
+    int pulseWidth = 0;
+    double elapsedTime = 0;
 
+    // Set alert on echo pin
+    gpioSetAlertFuncEx(sensor->echoGpio, sonarEcho, (void *) (&pulseWidth));
+
+    // Clear trigger pin
+    gpioWrite(sensor->triggerGpio, 0);
+    usleep(1000);
+
+    // Raise trigger for 10 microseconds
     gpioWrite(sensor->triggerGpio, 1);
-    usleep(10);
+    gpioDelay(1000);
     gpioWrite(sensor->triggerGpio, 0);
 
-    gettimeofday(&start,NULL);
-    gettimeofday(&end,NULL);
-
-    elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-
-    while(gpioRead(sensor->echoGpio) == 0 && elapsed < timeout_us)
-    {
-        gettimeofday(&measureStart, NULL);
-        while ( gpioRead(sensor->echoGpio) == 1 );
-        gettimeofday(&measureEnd,NULL);
-
-        gettimeofday(&end,NULL);
-        elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+    //Check echo pin
+    while(gpioRead(sensor->echoGpio) == 0){
+       startTime = clock();
+    }
+    printf("here\n");
+    while(gpioRead(sensor->echoGpio) == 1 &&
+          elapsedTime < timeout_us / 1000000.0){
+       endTime = clock();
+       elapsedTime = (double) (endTime-startTime) / CLOCKS_PER_SEC;
     }
 
-    pulseWidth = ((measureEnd.tv_sec - measureStart.tv_sec) * 1000000) 
-                  + (measureEnd.tv_usec - measureStart.tv_usec);
-
     // Get distance in feet
-    printf("Pulse Width: %li \n", pulseWidth);
-    return (pulseWidth/1000000.0) * 1158.7/2.0;
+    return elapsedTime * 1158.7/2.0;
 }
 
+void sonarEcho(
+    int gpio,
+    int level,
+    uint32_t tick,
+    void * diffTick
+)
+{
+    static uint32_t startTick, firstTick = 0;
+
+    if( !firstTick ) firstTick = tick;
+
+    printf("Level: %i\n", level);
+    if(level == 1){
+        startTick = tick;
+    }
+    else if(level == 0){
+        *((int *)diffTick) = tick - startTick;
+        printf("Diff tick %i\n", *((int *)diffTick));
+    }
+}
