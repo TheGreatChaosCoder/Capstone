@@ -33,17 +33,42 @@ double calculateDistance(
     const int numData
 ){
     double result = 0;
-    int dataUsed = 0;
-    int i;
+    int calculationsUsed = 0;
+    double temp, x;
+    int i, j;
 
     for(i = 0; i<numData; i++){
+<<<<<<< HEAD
 
 	printf("Data: %f, Pos: %f", data[i], position[i]);
+=======
+        for(j = 0; j<numData; j++){
+            // Cannot make calculations if i==j
+            if(i == j){
+                continue;
+            }
 
-        result += sqrt(data[i]*data[i] - position[i]*position[i]);
-        dataUsed++;
+            // cos(theta) = (d_1^2 + x^2 -d_2^2)/(2*d_1*x)
+            x = position[i]-position[j];
+            temp = (data[i]*data[i] + x*x - data[j]*data[j] )/(2*data[i]*x);
+            temp = temp * temp;
+>>>>>>> d6014c21ce3651b29cf05c84a2003275304d34f4
+
+             // This is an invalid arguemnt
+            if(temp > 1){
+                continue;
+            }
+
+            // r = d_1 * sqrt(1-temp)
+            result += data[i] * sqrt(1 - temp);
+            dataUsed++;
+        }
     }
 
+<<<<<<< HEAD
     printf("Distance: %f\n", result/dataUsed);
+=======
+    // Taking average of calculations
+>>>>>>> d6014c21ce3651b29cf05c84a2003275304d34f4
     return result/dataUsed;
 }
