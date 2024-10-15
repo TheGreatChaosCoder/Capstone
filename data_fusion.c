@@ -1,5 +1,6 @@
 #include "data_fusion.h"
 #include <math.h>
+#include <stdio.h>
 
 double calculateDistance(const double* data, const double* position, const int numData);
 
@@ -23,7 +24,6 @@ int inRange(
     if(threshold > calculateDistance(data, position, numData)){
         return 1;
     }
-    
     return 0;
 }
 
@@ -37,14 +37,13 @@ double calculateDistance(
     int i;
 
     for(i = 0; i<numData; i++){
-        // This is an invalid arguemnt
-        if(abs(data[1]/position[i]) > 1){
-            continue;
-        }
+
+	printf("Data: %f, Pos: %f", data[i], position[i]);
 
         result += sqrt(data[i]*data[i] - position[i]*position[i]);
         dataUsed++;
     }
 
+    printf("Distance: %f\n", result/dataUsed);
     return result/dataUsed;
 }

@@ -30,7 +30,7 @@ double readSensor(
     )
 {
     struct timeval start, end, measureStart, measureEnd;
-    int elapsed, pulseWidth;
+    long elapsed, pulseWidth;
 
     gpioWrite(sensor->triggerGpio, 1);
     usleep(10);
@@ -55,6 +55,7 @@ double readSensor(
                   + (measureEnd.tv_usec - measureStart.tv_usec);
 
     // Get distance in feet
+    printf("Pulse Width: %li \n", pulseWidth);
     return (pulseWidth/1000000.0) * 1158.7/2.0;
 }
 
