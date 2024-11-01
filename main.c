@@ -143,6 +143,8 @@ int main(){
             data[1] = readSensor(&pSensor[1], TIMEOUT);
             printf("Collected Data\n");
 
+            
+
             // Loading
             if(speed > 1){
                 motorOn = (inRange(data, positions,

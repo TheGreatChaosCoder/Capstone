@@ -13,7 +13,7 @@ double calculateDistance(const double* data, const double* position, const int n
  * @param position The sensor's positions on a line from a defined center
  * @param numData The amount of data in the provided arrays
  * @param threshold The maximum distance to be considered "in range"
- * @return 1 if it's in range, 0 otherwise
+ * @return 1 if it's in range, 0 if it's out of range, -1 if no distances were calculated.
  */
 int inRange(
     double* data,
@@ -21,7 +21,12 @@ int inRange(
     int numData,
     double threshold
 ){
-    if(threshold > calculateDistance(data, position, numData)){
+    double distance = calculateDistance(data, position, numData);
+
+    if(distance < 0){
+        return -1;
+    }
+    if(threshold > distance){
         return 1;
     }
     return 0;
