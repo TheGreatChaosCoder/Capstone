@@ -40,7 +40,7 @@ double readSensor(
 
     // Clear trigger pin
     if((error = gpioWrite(sensor->triggerGpio, 0)) != 0){
-        printf("cannot write to trigger, got error %i, returning -1\n", error);
+        printf("Cannot write to trigger, got error %i, returning -1\n", error);
         return -1;
     }
     gpioDelay(5);
@@ -49,6 +49,12 @@ double readSensor(
     gpioWrite(sensor->triggerGpio, 1);
     gpioDelay(10);
     gpioWrite(sensor->triggerGpio, 0);
+
+    //Check echoGpio first
+    if((error = gpioRead) != 1 || error != 0){
+        printf("cannot read echo, got error %i, returning -1\n", error);
+        return -1;
+    }
 
     //Check echo pin
     while(gpioRead(sensor->echoGpio) == 0){
