@@ -13,8 +13,8 @@
 
     MotorController initMotorController(
       const int forwardPin, const int reversePin, const int speakerPin);
-    int setMotorSpeed(MotorController * controller, float speed);
-    void stopMotor(MotorController * controller);
+    int setMotorSpeed(const MotorController * controller, float speed);
+    void stopMotor(const MotorController * controller);
     void setSpeaker(const MotorController * controller, int on);
 
    #ifdef __cplusplus

@@ -42,7 +42,7 @@ MotorController initMotorController(
  * @return 0 if successful, -1 if speed is invalid
  */
 int setMotorSpeed(
-    MotorController * controller,
+    const MotorController * controller,
     float speed
     )
 {
@@ -69,10 +69,10 @@ void setSpeaker(
 }
 
 void stopMotor(
-    MotorController * controller
+    const MotorController * controller
     )
 {
-    setSpeaker(false)
+    setSpeaker(controller, 0)
     setMotorController(controller, 0);
 }
 
