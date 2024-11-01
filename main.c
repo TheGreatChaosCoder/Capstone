@@ -91,6 +91,16 @@ void sigint_handler(int sig_no)
 
 // End of Input Event Listeners
 
+// Data Collection Thread
+void * dataCollectionThread(void * ptr){
+    double data;
+
+    data = readSensor((ProximitySensor *) ptr, TIMEOUT);
+
+    pthread_exit(&data);
+}
+// End of Data Collection Thread
+
 int main(){
     // Set the terminate function
     struct sigaction action;
@@ -122,7 +132,7 @@ int main(){
     pSensor[1] = initProxSensor(PROX_SENSOR_TRIGGER_2, PROX_SENSOR_ECHO_2);
 
     printf("Setting Up Threads and Semaphores...\n");
-    pthread_t estopThread, buttonThread;
+    pthread_t estopThread, buttonThread, dataThreads[2];
 
     sem_init(&button_mutex, 0, 1);
     sem_init(&estop_mutex, 0, 1);
@@ -159,8 +169,13 @@ int main(){
 
             // See if the distance threshold is met
             printf("Going to collect data\n");
-            data[0] = readSensor(&pSensor[0], TIMEOUT);
-            data[1] = readSensor(&pSensor[1], TIMEOUT);
+            pthread_create(&dataThreads[0], NULL, 
+                            &dataCollectionThread, &pSensor[0]);
+            pthread_create(&dataThreads[1], NULL, 
+                            &dataCollectionThread, &pSensor[1]);
+                            
+            pthread_join(dataThread[0]);
+            pthread_join(dataThread[1]);
             printf("Collected Data\n");
 
 
