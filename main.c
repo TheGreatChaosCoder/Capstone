@@ -41,9 +41,9 @@ void * estopButtonThread(void * ptr){
         buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
         sem_post(&estop_mutex);
 
-        if(buttons[2]){
-            printf("EStopped Pressed");
-        }
+        // if(buttons[2]){
+        //     printf("EStopped Pressed");
+        // }
 
         usleep(100);
     }
@@ -62,12 +62,12 @@ void * loadingButtonThread(void * ptr){
         buttons[1] = (gpioRead(UNLOAD_BUTTON) == 1 && !buttons[0]);
         sem_post(&button_mutex);
 
-        if(buttons[0]){
-            printf("Load Button Pressed");
-        }
-        else if(buttons[1]){
-            printf("Unload Button Pressed");
-        }
+        // if(buttons[0]){
+        //     printf("Load Button Pressed");
+        // }
+        // else if(buttons[1]){
+        //     printf("Unload Button Pressed");
+        // }
 
         usleep(200);
     }
