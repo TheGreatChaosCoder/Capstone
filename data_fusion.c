@@ -74,7 +74,7 @@ double calculateDistance(
     }
 
     if(dataUsed == 0){
-        result = 0;
+        result = -1;
          for(i = 0; i<numData; i++){
             if(data[i]>result){
                 result = data[i];
@@ -87,5 +87,5 @@ double calculateDistance(
 
     printf("Distance: %f, dataUsed = %i\n", result, dataUsed);
     // Taking average of calculations
-    return  dataUsed>0 ? result :  -1;
+    return result > 0 ? result : -1;
 }
