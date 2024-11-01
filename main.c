@@ -121,7 +121,7 @@ int main(){
     ProximitySensor pSensor[2];
     int motorOn = 0;
     int buttonInput;
-    double speed, data[2];
+    double speed, data[1];
 
     double positions[] = {POS_SENSOR_1, POS_SENSOR_2};
 
@@ -166,7 +166,7 @@ int main(){
             // See if the distance threshold is met
             printf("Going to collect data\n");
             data[0] = readSensor(&pSensor[0], TIMEOUT);
-            data[1] = readSensor(&pSensor[1], TIMEOUT);
+            //data[1] = readSensor(&pSensor[1], TIMEOUT);
             printf("Collected Data\n");
 
             // Loading
@@ -175,12 +175,12 @@ int main(){
             if(motorOn){
                 if(speed > 1){
                     motorOn = (inRange(data, positions,
-                            2, DISTANCE_LOAD_THRESHOLD) == 1);
+                            1, DISTANCE_LOAD_THRESHOLD) == 1);
                     usleep(100);
                 }
                 else{
                     motorOn = (inRange(data, positions,
-                            2, DISTANCE_UNLOAD_THRESHOLD) == 0);
+                            1, DISTANCE_UNLOAD_THRESHOLD) == 0);
                     usleep(100);
                 }
             }
