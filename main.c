@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include<signal.h>
 
 #include "motor_control.h"
 #include "prox_sensors.h"
@@ -25,6 +26,8 @@
 #define BUFFER_SIZE 5
 #define CDEV_NAME_BUTTON_FULL "/dev/Button"
 #define CDEV_NAME_ESTOP_FULL "/dev/EStop"
+
+struct sigaction old_action;
 
 // Start of Input Event Listeners
 
@@ -75,9 +78,23 @@ void * loadingButtonThread(void * ptr){
     pthread_exit(NULL);
 }
 
+void sigint_handler(int sig_no)
+{
+    printf("CTRL-C pressed\n");
+    sigaction(SIGINT, &old_action, NULL);
+    gpioTerminate();
+    kill(0, SIGINT);
+}
+
 // End of Input Event Listeners
 
 int main(){
+    // Set the terminate function
+    struct sigaction action;
+    memset(&action, 0, sizeof(action));
+    action.sa_handler = &sigint_handler;
+    sigaction(SIGINT, &action, &old_action);
+
     // Initialize All Sensors/Controllers/GPIOs
     printf("Getting All GPIOs Ready...\n");
     MotorController mController;
@@ -143,7 +160,7 @@ int main(){
             data[1] = readSensor(&pSensor[1], TIMEOUT);
             printf("Collected Data\n");
 
-            
+
 
             // Loading
             if(speed > 1){
