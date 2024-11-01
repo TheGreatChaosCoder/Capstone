@@ -24,11 +24,11 @@
    #define DISTANCE_UNLOAD_THRESHOLD 0.2
 
    // Position of Sensors (ft)
-   #define POS_SENSOR_1 0.25
-   #define POS_SENSOR_2 -0.25
+   #define POS_SENSOR_1 0.00
+   #define POS_SENSOR_2 2.00
 
-   // Sensor Read Timeout (us)
-   #define TIMEOUT 100
+   // Sensor Read Timeout (ms)
+   #define TIMEOUT 25
 
    // Define Character Device Names
    #define CDEV_NAME_BUTTON "Button"
