@@ -174,8 +174,8 @@ int main(){
             pthread_create(&dataThreads[1], NULL, 
                             &dataCollectionThread, &pSensor[1]);
                             
-            pthread_join(dataThread[0]);
-            pthread_join(dataThread[1]);
+            pthread_join(dataThreads[0], &data[0]);
+            pthread_join(dataThreads[1], &data[1]);
             printf("Collected Data\n");
 
 
