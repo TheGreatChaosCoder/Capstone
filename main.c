@@ -165,8 +165,8 @@ int main(){
 
             // See if the distance threshold is met
             printf("Going to collect data\n");
-            data[0] = readSensor(pSensor[0], TIMEOUT);
-            data[1] = readSensor(pSensor[1], TIMEOUT);
+            data[0] = readSensor(&pSensor[0], TIMEOUT);
+            data[1] = readSensor(&pSensor[1], TIMEOUT);
             printf("Collected Data\n");
 
             // Loading
