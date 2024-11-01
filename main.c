@@ -46,7 +46,7 @@ void * estopButtonThread(void * ptr){
 
         if(buttons[2]){
             sem_wait(&estop_mutex);
-            ((int *) ptr)* = 0;
+            *((int *) ptr) = 0;
             sem_post(&estop_mutex);
         }
 
