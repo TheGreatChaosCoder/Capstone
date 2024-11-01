@@ -79,18 +79,18 @@ void stopMotor(
 
 void setMotorController(
     const MotorController * controller,
-    double speed
+    const double speed
     )
 {
     if(speed > 0){
-        gpioPWM(controller->forward, (int) (255 * speed));
+        gpioPWM(controller->forward, (int) (254 * speed));
         gpioPWM(controller->reverse, 0);
     }
     else{
         gpioPWM(controller->forward, 0);
-        gpioPWM(controller->reverse, (int) (-255 * speed));
+        gpioPWM(controller->reverse, (int) (-254 * speed));
     }
 
-    setSpeaker(controller, speed != 0);
+    setSpeaker(controller, (int) (254 * speed) != 0);
 }
 
