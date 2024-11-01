@@ -33,6 +33,7 @@
 sem_t estop_mutex;
 sem_t button_mutex;
 int buttons[3]; // load, unload, estop
+pthread_t estopThread, buttonThread, dataThreads[2];
 
 struct sigaction old_action;
 int terminate = 0;
@@ -89,6 +90,8 @@ void sigint_handler(int sig_no)
     terminate = 1;
     printf("CTRL-C pressed\n");
     sigaction(SIGINT, &old_action, NULL);
+    pthread_join(estopThread, NULL);
+    pthread_join(buttonThread, NULL);
     gpioTerminate();
     kill(0, SIGINT);
 }
@@ -136,7 +139,6 @@ int main(){
     pSensor[1] = initProxSensor(PROX_SENSOR_TRIGGER_2, PROX_SENSOR_ECHO_2);
 
     printf("Setting Up Threads and Semaphores...\n");
-    pthread_t estopThread, buttonThread, dataThreads[2];
 
     sem_init(&button_mutex, 0, 1);
     sem_init(&estop_mutex, 0, 1);
