@@ -28,7 +28,7 @@ MotorController initMotorController(
     gpioInitialise();
     gpioSetMode(forwardPin, PI_ALT0);
     gpioSetMode(reversePin, PI_ALT0);
-    gpioSetMode(speakerPin, PI_OUT);
+    gpioSetMode(speakerPin, PI_OUTPUT);
 
     return controller;
 }
@@ -72,7 +72,7 @@ void stopMotor(
     const MotorController * controller
     )
 {
-    setSpeaker(controller, 0)
+    setSpeaker(controller, 0);
     setMotorController(controller, 0);
 }
 
