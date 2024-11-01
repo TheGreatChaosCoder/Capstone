@@ -63,7 +63,7 @@ double readSensor(
     }
 
     // Get distance in feet
-    printf("Time: %lf, Measured distance = %f\n", elapsedTime*1000.0, 12*elapsedTime*1125.3/2.0 );
+    printf("Time: %Lf, Measured distance = %Lf\n", elapsedTime*1000.0, 12*elapsedTime*1125.3/2.0 );
     return elapsedTime * 12.0 * 1125.3/2.0;
 }
 
