@@ -27,9 +27,14 @@ MotorController initMotorController(
     controller.speaker = speakerPin;
 
     gpioInitialise();
+
     gpioSetMode(forwardPin, PI_ALT0);
     gpioSetMode(reversePin, PI_ALT0);
     gpioSetMode(speakerPin, PI_OUTPUT);
+
+    gpioPWM(forwardPin, 0);
+    gpioPWM(reversePin, 0);
+    gpioWrite(speakerPin, 0);
 
     return controller;
 }
