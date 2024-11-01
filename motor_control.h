@@ -15,7 +15,7 @@
       const int forwardPin, const int reversePin, const int speakerPin);
     int setMotorSpeed(MotorController * controller, float speed);
     void stopMotor(MotorController * controller);
-    void setSpeaker(MotorController * controller, int on)
+    void setSpeaker(MotorController * controller, int on);
 
    #ifdef __cplusplus
       } // extern "C"

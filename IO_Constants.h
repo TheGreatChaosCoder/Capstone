@@ -26,10 +26,10 @@
 
    // Position of Sensors (ft)
    #define POS_SENSOR_1 0.00
-   #define POS_SENSOR_2 2.00
+   #define POS_SENSOR_2 3.50
 
    // Sensor Read Timeout (ms)
-   #define TIMEOUT 25
+   #define TIMEOUT 40
 
    // Define Character Device Names
    #define CDEV_NAME_BUTTON "Button"
