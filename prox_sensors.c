@@ -51,8 +51,9 @@ double readSensor(
     gpioWrite(sensor->triggerGpio, 0);
 
     //Check echoGpio first
-    if((error = gpioRead(sensor->echoGpio)) != 1 && error != 0){
-        printf("cannot read echo, got error %i, returning -1\n", error);
+    error = gpioRead(sensor->echoGpio);
+    if(error != 1 && error != 0){
+        printf("Cannot read echo, got error %i, returning -1\n", error);
         return -1;
     }
 
@@ -66,12 +67,6 @@ double readSensor(
        clock_gettime(CLOCK_MONOTONIC, &endTime);
        elapsedTime = (endTime.tv_sec + endTime.tv_nsec/1.0E9
                     -(startTime.tv_sec + startTime.tv_nsec/1.0E9));
-    }
-
-    // Check if it timed out
-    if(elapsedTime < timeout_ms / 1.0E3){
-        printf("Timed out, assume nothing is on the belt\n");
-        return -1;
     }
 
     // Get distance in feet
