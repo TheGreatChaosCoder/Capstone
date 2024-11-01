@@ -42,9 +42,13 @@ void * estopButtonThread(void * ptr){
 
     while(!terminate)
     {
-        sem_wait(&estop_mutex);
         buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
-        sem_post(&estop_mutex);
+
+        if(buttons[2]){
+            sem_wait(&estop_mutex);
+            ((int *) ptr)* = 0;
+            sem_post(&estop_mutex);
+        }
 
         // if(buttons[2]){
         //     printf("EStopped Pressed");
@@ -137,7 +141,7 @@ int main(){
     sem_init(&button_mutex, 0, 1);
     sem_init(&estop_mutex, 0, 1);
 
-    pthread_create(&estopThread, NULL, &estopButtonThread, NULL);
+    pthread_create(&estopThread, NULL, &estopButtonThread, &motorOn);
     pthread_create(&buttonThread, NULL, &loadingButtonThread, NULL);
 
     printf("Starting Loop...\n");
@@ -169,23 +173,19 @@ int main(){
             printf("Collected Data\n");
 
             // Loading
-            if(speed > 1){
-                motorOn = (inRange(data, positions,
-                           2, DISTANCE_LOAD_THRESHOLD) == 1);
-                usleep(100);
-            }
-            else{
-                motorOn = (inRange(data, positions,
-                           2, DISTANCE_UNLOAD_THRESHOLD) == 0);
-                usleep(100);
-            }
-
             // Check Stop First
             sem_wait(&estop_mutex);
-            if(buttons[2] == 1){
-                printf("Currently Stopped");
-                
-                stopMotor(&mController);
+            if(motorOn){
+                if(speed > 1){
+                    motorOn = (inRange(data, positions,
+                            2, DISTANCE_LOAD_THRESHOLD) == 1);
+                    usleep(100);
+                }
+                else{
+                    motorOn = (inRange(data, positions,
+                            2, DISTANCE_UNLOAD_THRESHOLD) == 0);
+                    usleep(100);
+                }
             }
             sem_post(&estop_mutex);
 
