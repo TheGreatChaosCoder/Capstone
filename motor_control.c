@@ -56,7 +56,7 @@ int setMotorSpeed(
 }
 
 void setSpeaker(
-    MotorController * controller,
+    const MotorController * controller,
     int on
     )
 {
@@ -90,6 +90,6 @@ void setMotorController(
         gpioPWM(controller->reverse, (int) (255 * speed));
     }
 
-    setSpeaker(speed != 0)
+    setSpeaker(controller, speed != 0);
 }
 
