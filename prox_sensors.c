@@ -68,6 +68,12 @@ double readSensor(
                     -(startTime.tv_sec + startTime.tv_nsec/1.0E9));
     }
 
+    // Check if it timed out
+    if(elapsedTime < timeout_ms / 1.0E3){
+        printf("Timed out, assume nothing is on the belt\n");
+        return -1;
+    }
+
     // Get distance in feet
     printf("Time: %Lf, Measured distance = %Lf\n", elapsedTime*1000.0, 12*elapsedTime*1125.3/2.0 );
     return elapsedTime * 12.0 * 1125.3/2.0;

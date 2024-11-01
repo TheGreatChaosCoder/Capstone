@@ -145,16 +145,6 @@ int main(){
     // Main Loop
     while(1)
     {
-        // Check Estop First
-        sem_wait(&estop_mutex);
-        if(buttons[2] == 1){
-            printf("Currently EStopped");
-            stopMotor(&mController);
-            usleep(500);
-            continue;
-        }
-        sem_post(&estop_mutex);
-
         // Check Button Presses
         sem_wait(&button_mutex);
         buttonInput = buttons[0] == 1 ? LOAD_BUTTON :
@@ -189,6 +179,16 @@ int main(){
                            2, DISTANCE_UNLOAD_THRESHOLD) == 0);
                 usleep(100);
             }
+
+            // Check Stop First
+            sem_wait(&estop_mutex);
+            if(buttons[2] == 1){
+                printf("Currently Stopped");
+                
+                stopMotor(&mController);
+            }
+            sem_post(&estop_mutex);
+
         }
 	else{
 	    stopMotor(&mController);

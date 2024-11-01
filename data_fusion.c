@@ -70,7 +70,19 @@ double calculateDistance(
         }
     }
 
-    printf("Distance: %f, dataUsed = %i\n", result/dataUsed, dataUsed);
+    if(dataUsed == 0){
+        result = 0;
+         for(i = 0; i<numData; i++){
+            if(data[i]>result){
+                result = data[i];
+            }
+         }
+    }
+    else{
+        result = result/dataUsed;
+    }
+
+    printf("Distance: %f, dataUsed = %i\n", result, dataUsed);
     // Taking average of calculations
-    return  dataUsed>0 ? result/dataUsed :  -1;
+    return  dataUsed>0 ? result :  -1;
 }
