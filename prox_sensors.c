@@ -33,12 +33,16 @@ double readSensor(
     struct timespec startTime, endTime;
    // int pulseWidth = 0;
     long double elapsedTime = 0;
+    int error;
 
     // Set alert on echo pin
    // gpioSetAlertFuncEx(sensor->echoGpio, sonarEcho, (void *) (&pulseWidth));
 
     // Clear trigger pin
-    gpioWrite(sensor->triggerGpio, 0);
+    if((error = gpioWrite(sensor->triggerGpio, 0)) != 0){
+        printf("cannot write to trigger, got error %i, returning -1\n", error);
+        return -1;
+    }
     gpioDelay(5);
 
     // Raise trigger for 10 microseconds
