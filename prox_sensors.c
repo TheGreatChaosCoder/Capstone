@@ -51,7 +51,7 @@ double readSensor(
     gpioWrite(sensor->triggerGpio, 0);
 
     //Check echoGpio first
-    if((error = gpioRead(sensor->echoGpio)) != 1 || error != 0){
+    if((error = gpioRead(sensor->echoGpio)) != 1 && error != 0){
         printf("cannot read echo, got error %i, returning -1\n", error);
         return -1;
     }
