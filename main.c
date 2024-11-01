@@ -12,6 +12,7 @@
 #include <pigpio.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -27,18 +28,19 @@
 #define CDEV_NAME_BUTTON_FULL "/dev/Button"
 #define CDEV_NAME_ESTOP_FULL "/dev/EStop"
 
-struct sigaction old_action;
-
 // Start of Input Event Listeners
 
 sem_t estop_mutex;
 sem_t button_mutex;
 int buttons[3]; // load, unload, estop
 
+struct sigaction old_action;
+int terminate = 0;
+
 void * estopButtonThread(void * ptr){
     buttons[2] = 0;
 
-    while(1)
+    while(!terminate)
     {
         sem_wait(&estop_mutex);
         buttons[2] = (gpioRead(SOFT_ESTOP) == 1);
@@ -58,7 +60,7 @@ void * loadingButtonThread(void * ptr){
     buttons[0] = 0;
     buttons[1] = 0;
 
-    while(1)
+    while(!terminate)
     {
         sem_wait(&button_mutex);
         buttons[0] = (gpioRead(LOAD_BUTTON) == 1);
@@ -80,6 +82,7 @@ void * loadingButtonThread(void * ptr){
 
 void sigint_handler(int sig_no)
 {
+    terminate = 1;
     printf("CTRL-C pressed\n");
     sigaction(SIGINT, &old_action, NULL);
     gpioTerminate();
