@@ -119,6 +119,7 @@ int main(){
         sem_wait(&estop_mutex);
         if(buttons[2] == 1){
             printf("Currently EStopped");
+            stopMotor(&mController);
             usleep(500);
             continue;
         }
@@ -139,6 +140,7 @@ int main(){
             // See if the distance threshold is met
             data[0] = readSensor(&pSensor[0], TIMEOUT);
             data[1] = readSensor(&pSensor[1], TIMEOUT);
+            printf("Collected Data\n");
 
             // Loading
             if(speed > 1){
