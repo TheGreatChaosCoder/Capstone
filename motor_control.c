@@ -1,4 +1,5 @@
 #include "motor_control.h"
+#include <math.h>
 #include <pigpio.h>
 
 void setMotorController(const MotorController * controller, double speed);
@@ -87,7 +88,7 @@ void setMotorController(
     }
     else{
         gpioPWM(controller->forward, 0);
-        gpioPWM(controller->reverse, (int) (255 * speed));
+        gpioPWM(controller->reverse, (int) (-255 * speed));
     }
 
     setSpeaker(controller, speed != 0);
