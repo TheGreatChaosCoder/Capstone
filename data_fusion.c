@@ -43,6 +43,9 @@ double calculateDistance(
     int i, j;
 
     printf("Start calculating distance..\n");
+    if(numData == 1){
+        return data[0];
+    }
 
     for(i = 0; i<numData; i++){
 
