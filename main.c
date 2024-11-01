@@ -178,8 +178,6 @@ int main(){
             pthread_join(dataThreads[1], &data[1]);
             printf("Collected Data\n");
 
-
-
             // Loading
             if(speed > 1){
                 motorOn = (inRange(data, positions,
