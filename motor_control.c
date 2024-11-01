@@ -15,17 +15,20 @@ void setMotorController(const MotorController * controller, double speed);
  * @return MotorController data structure
  */
 MotorController initMotorController(
-    int forwardPin,
-    int reversePin
+    const int forwardPin,
+    const int reversePin,
+    const int speakerPin
     )
 {
     MotorController controller;
     controller.forward = forwardPin;
     controller.reverse = reversePin;
+    controller.speaker = speakerPin;
 
     gpioInitialise();
     gpioSetMode(forwardPin, PI_ALT0);
     gpioSetMode(reversePin, PI_ALT0);
+    gpioSetMode(speakerPin, PI_OUT);
 
     return controller;
 }
@@ -52,10 +55,24 @@ int setMotorSpeed(
     return 0;
 }
 
+void setSpeaker(
+    MotorController * controller,
+    int on
+    )
+{
+    if(on){
+        gpioWrite(controller->speaker, 1);
+    }
+    else{
+        gpioWrite(controller->speaker, 0);
+    }
+}
+
 void stopMotor(
     MotorController * controller
     )
 {
+    setSpeaker(false)
     setMotorController(controller, 0);
 }
 
@@ -72,5 +89,7 @@ void setMotorController(
         gpioPWM(controller->forward, 0);
         gpioPWM(controller->reverse, (int) (255 * speed));
     }
+
+    setSpeaker(speed != 0)
 }
 

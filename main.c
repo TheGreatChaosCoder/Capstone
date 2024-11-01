@@ -86,7 +86,7 @@ int main(){
     gpioSetMode(LOAD_BUTTON, PI_INPUT);
     gpioSetMode(UNLOAD_BUTTON, PI_INPUT);
 
-    mController = initMotorController(MOTOR_CONTROLLER_F, MOTOR_CONTROLLER_R);
+    mController = initMotorController(MOTOR_CONTROLLER_F, MOTOR_CONTROLLER_R, SPEAKER_CONTROLLER);
     pSensor[0] = initProxSensor(PROX_SENSOR_TRIGGER_1, PROX_SENSOR_ECHO_1);
     pSensor[1] = initProxSensor(PROX_SENSOR_TRIGGER_2, PROX_SENSOR_ECHO_2);
 
@@ -133,10 +133,12 @@ int main(){
             if(speed > 1){
                 motorOn = (inRange(data, positions,
                            2, DISTANCE_LOAD_THRESHOLD) == 1);
+                usleep(100);
             }
             else{
                 motorOn = (inRange(data, positions,
                            2, DISTANCE_UNLOAD_THRESHOLD) == 0);
+                usleep(100);
             }
         }
 	else{

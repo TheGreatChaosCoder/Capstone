@@ -18,6 +18,7 @@
 
    #define MOTOR_CONTROLLER_F 12
    #define MOTOR_CONTROLLER_R 13
+   #define SPEAKER_CONTROLLER 16
 
    // Distance Threshold
    #define DISTANCE_LOAD_THRESHOLD 0.2
