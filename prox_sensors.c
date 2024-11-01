@@ -27,38 +27,40 @@ ProximitySensor initProxSensor(
 
 double readSensor(
     const ProximitySensor * sensor,
-    const double timeout_us
+    const double timeout_ms
     )
 {
-    clock_t startTime, endTime;
-    int pulseWidth = 0;
-    double elapsedTime = 0;
+    struct timespec startTime, endTime;
+   // int pulseWidth = 0;
+    long double elapsedTime = 0;
 
     // Set alert on echo pin
-    gpioSetAlertFuncEx(sensor->echoGpio, sonarEcho, (void *) (&pulseWidth));
+   // gpioSetAlertFuncEx(sensor->echoGpio, sonarEcho, (void *) (&pulseWidth));
 
     // Clear trigger pin
     gpioWrite(sensor->triggerGpio, 0);
-    usleep(1000);
+    gpioDelay(5);
 
     // Raise trigger for 10 microseconds
     gpioWrite(sensor->triggerGpio, 1);
-    gpioDelay(1000);
+    gpioDelay(10);
     gpioWrite(sensor->triggerGpio, 0);
 
     //Check echo pin
     while(gpioRead(sensor->echoGpio) == 0){
-       startTime = clock();
+       clock_gettime(CLOCK_MONOTONIC, &startTime);
     }
-    printf("here\n");
+
     while(gpioRead(sensor->echoGpio) == 1 &&
-          elapsedTime < timeout_us / 1000000.0){
-       endTime = clock();
-       elapsedTime = (double) (endTime-startTime) / CLOCKS_PER_SEC;
+          elapsedTime < timeout_ms / 1.0E3){
+       clock_gettime(CLOCK_MONOTONIC, &endTime);
+       elapsedTime = (endTime.tv_sec + endTime.tv_nsec/1.0E9
+                    -(startTime.tv_sec + startTime.tv_nsec/1.0E9));
     }
 
     // Get distance in feet
-    return elapsedTime * 1158.7/2.0;
+    printf("Time: %lf, Measured distance = %f\n", elapsedTime*1000.0, 12*elapsedTime*1125.3/2.0 );
+    return elapsedTime * 12.0 * 1125.3/2.0;
 }
 
 void sonarEcho(
