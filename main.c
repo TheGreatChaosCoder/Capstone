@@ -165,13 +165,8 @@ int main(){
 
             // See if the distance threshold is met
             printf("Going to collect data\n");
-            pthread_create(&dataThreads[0], NULL, 
-                            &dataCollectionThread, &pSensor[0]);
-            pthread_create(&dataThreads[1], NULL, 
-                            &dataCollectionThread, &pSensor[1]);
-                            
-            pthread_join(dataThreads[0], &data[0]);
-            pthread_join(dataThreads[1], &data[1]);
+            data[0] = readSensor(pSensor[0], TIMEOUT);
+            data[1] = readSensor(pSensor[1], TIMEOUT);
             printf("Collected Data\n");
 
             // Loading

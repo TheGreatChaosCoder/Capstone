@@ -96,6 +96,6 @@ void setMotorController(
         gpioPWM(controller->reverse, (int) (-254 * speed));
     }
 
-    setSpeaker(controller, (int) (254 * speed) != 0);
+    setSpeaker(controller, (int) (254 * speed) != 0 ? 1 : 0);
 }
 
