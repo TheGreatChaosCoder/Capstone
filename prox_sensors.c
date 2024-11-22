@@ -57,12 +57,23 @@ double readSensor(
         return -1;
     }
 
+    //Get an initial start time
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
     //Check echo pin
-    while(gpioRead(sensor->echoGpio) == 0){
-       clock_gettime(CLOCK_MONOTONIC, &startTime);
+    while(gpioRead(sensor->echoGpio) == 0 ||
+          elapsedTime < timeout_ms / 1.0E3){
+       clock_gettime(CLOCK_MONOTONIC, &endTime);
+       elapsedTime = (endTime.tv_sec + endTime.tv_nsec/1.0E9
+                    -(startTime.tv_sec + startTime.tv_nsec/1.0E9));
     }
 
-    while(gpioRead(sensor->echoGpio) == 1 &&
+    // Assume the object is too far out to mean anything
+    if(elapsedTime > timeout_ms/1.0E3){
+        return timeout_ms/1.0E3 * 12.0 * 1125.3/2.0;
+    }
+
+    while(gpioRead(sensor->echoGpio) == 1 ||
           elapsedTime < timeout_ms / 1.0E3){
        clock_gettime(CLOCK_MONOTONIC, &endTime);
        elapsedTime = (endTime.tv_sec + endTime.tv_nsec/1.0E9
